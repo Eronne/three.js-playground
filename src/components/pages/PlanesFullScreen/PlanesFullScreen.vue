@@ -7,8 +7,8 @@
 import * as THREE from 'three'
 import { TweenMax } from 'gsap'
 
-// import vertex from '~/assets/glsl/planes-full-screen/vert.vs'
-// import fragment from '~/assets/glsl/planes-full-screen/frag.fr'
+import vertex from './shaders/vert.vs'
+import fragment from './shaders/frag.fs'
 
 export default {
   name: 'planes-full-screen',
