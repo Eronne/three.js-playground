@@ -12,34 +12,25 @@ import fragment from './shaders/frag.fs'
 
 export default {
   name: 'planes-full-screen',
-  data () {
-    return {
-      mousePositions: {
-        x: 0,
-        y: 0
-      }
-    }
-  },
   mounted () {
     this.createScene()
-    this.setRendererSize()
     this.addListeners()
   },
   methods: {
     addListeners () {
       window.addEventListener('resize', this.setRendererSize)
       window.addEventListener('mousemove', this.getMousePosition)
-      window.addEventListener('click', this.openContent)
+      window.addEventListener('click', this.scalePlaneWhenIntersect)
     },
     removeListeners () {
       window.removeEventListener('resize', this.setRendererSize)
       window.removeEventListener('mousemove', this.getMousePosition)
-      window.removeEventListener('click', this.openContent)
+      window.removeEventListener('click', this.scalePlaneWhenIntersect)
     },
     createScene () {
       this.scene = new THREE.Scene()
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-
+      this.camera.position.z = 5
       this.renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true
@@ -51,8 +42,7 @@ export default {
 
       this.raycaster = new THREE.Raycaster()
       this.center = new THREE.Vector2()
-
-      this.camera.position.z = 5
+      this.mousePositions = {x: 0, y: 0}
 
       this.render()
     },
@@ -67,8 +57,8 @@ export default {
         this.material = new THREE.MeshBasicMaterial({ color: 0x1A1A1A })
 
         this.plane = new THREE.Mesh(this.geometry, this.material)
-        this.plane.position.y = this.offset
         this.plane.name = `plane${i}`
+        this.plane.position.y = this.offset
 
         this.bindImageToPlane(this.plane)
 
@@ -102,7 +92,7 @@ export default {
       this.mousePositions.x = e.clientX
       this.mousePositions.y = e.clientY
     },
-    openContent (e) {
+    scalePlaneWhenIntersect (e) {
       let intersects = this.raycaster.intersectObjects(this.group.children)
 
       if (this.currentPlane) this.currentPlane.material.color.set(0x1A1A1A)
