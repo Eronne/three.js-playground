@@ -7,8 +7,9 @@
 import * as THREE from 'three'
 import { TweenMax } from 'gsap'
 
-import vertex from './shaders/vert.vs'
-import fragment from './shaders/frag.fs'
+import vertexSource from './shaders/vert.vs'
+import fragmentSource from './shaders/frag.fs'
+import texturePath from './assets/planes-bg.jpg'
 
 export default {
   name: 'planes-full-screen',
@@ -29,8 +30,10 @@ export default {
     },
     createScene () {
       this.scene = new THREE.Scene()
+
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
       this.camera.position.z = 5
+
       this.renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true
@@ -48,19 +51,17 @@ export default {
     },
     createPlanes (iterations, width, height) {
       this.group = new THREE.Group()
-      // this.textureLoader = new THREE.TextureLoader
+      this.textureLoader = new THREE.TextureLoader
 
       for (let i = 0; i < iterations; i++) {
         this.offset = -i * (height + 1)
 
         this.geometry = new THREE.PlaneBufferGeometry(width, height, 1, 1)
-        this.material = new THREE.MeshBasicMaterial({ color: 0x1A1A1A })
+        this.bindImageToPlane(this.plane)
 
         this.plane = new THREE.Mesh(this.geometry, this.material)
         this.plane.name = `plane${i}`
         this.plane.position.y = this.offset
-
-        this.bindImageToPlane(this.plane)
 
         this.group.add(this.plane)
       }
@@ -70,7 +71,18 @@ export default {
       this.scene.add(this.group)
     },
     bindImageToPlane (plane) {
-      console.log(plane)
+      this.texture = this.textureLoader.load(texturePath)
+      this.texture.magFilter = THREE.NearestFilter
+
+      let uniforms = {
+        texture: {type: 't', value: THREE.ImageUtils.loadTexture(texturePath)}
+      }
+
+      this.material = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: vertexSource,
+        fragmentShader: fragmentSource
+      })
     },
     render () {
       requestAnimationFrame(this.render)
@@ -99,8 +111,9 @@ export default {
 
       intersects.forEach(intersect => {
         if (intersect.object.name.match(/plane.+?/)) {
-          intersect.object.material.color.set(0x7c7c7c)
-          this.currentPlane = intersect.object
+          console.log(intersect.object.name)
+          // intersect.object.material.color.set(0x7c7c7c)
+          // this.currentPlane = intersect.object
         }
       })
     }
