@@ -51,7 +51,7 @@ export default {
     },
     createPlanes (iterations, width, height) {
       this.group = new THREE.Group()
-      this.textureLoader = new THREE.TextureLoader
+      this.textureLoader = new THREE.TextureLoader()
 
       for (let i = 0; i < iterations; i++) {
         this.offset = -i * (height + 1)
@@ -71,11 +71,8 @@ export default {
       this.scene.add(this.group)
     },
     bindImageToPlane (plane) {
-      this.texture = this.textureLoader.load(texturePath)
-      this.texture.magFilter = THREE.NearestFilter
-
       let uniforms = {
-        texture: {type: 't', value: THREE.ImageUtils.loadTexture(texturePath)}
+        texture: {type: 't', value: this.textureLoader.load(texturePath)}
       }
 
       this.material = new THREE.ShaderMaterial({
