@@ -71,8 +71,10 @@ export default {
       this.scene.add(this.group)
     },
     bindImageToPlane (plane) {
+      this.texture = this.textureLoader.load(texturePath)
+
       let uniforms = {
-        texture: {type: 't', value: this.textureLoader.load(texturePath)}
+        texture: {type: 't', value: this.texture}
       }
 
       this.material = new THREE.ShaderMaterial({
