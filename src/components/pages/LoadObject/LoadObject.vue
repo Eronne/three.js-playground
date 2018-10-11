@@ -25,6 +25,8 @@ export default {
       window.removeEventListener('click', this.scalePlaneWhenIntersect)
     },
     createScene () {
+      this.clock = new THREE.Clock();
+
       this.scene = new THREE.Scene()
 
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -50,13 +52,11 @@ export default {
       this.loader.load(
         './../../../../static/gltf/scene.gltf',
         (gltf) => {
-          this.scene.add( gltf.scene );
+          let model = gltf.scene
+          this.scene.add(model)
 
-          gltf.animations
-          gltf.scene
-          gltf.scenes
-          gltf.cameras
-          gltf.asset
+          this.mixer = new THREE.AnimationMixer(model)
+          this.mixer.clipAction(gltf.animations[0]).play()
         },
         function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded')
@@ -69,6 +69,11 @@ export default {
     },
     render () {
       requestAnimationFrame(this.render)
+
+      let delta = this.clock.getDelta()
+      if (this.mixer != null) {
+          this.mixer.update(delta);
+      };
 
       this.renderer.render(this.scene, this.camera)
     },
