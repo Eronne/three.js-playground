@@ -39,7 +39,7 @@ export default {
       this.setRendererSize()
       this.$el.appendChild(this.renderer.domElement)
 
-      this.light = new THREE.AmbientLight(0xfffff, 1.3)
+      this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1)
       this.scene.add(this.light)
 
       this.loadObject()
@@ -54,6 +54,8 @@ export default {
         (gltf) => {
           let model = gltf.scene
           this.scene.add(model)
+
+          console.log(gltf)
 
           this.mixer = new THREE.AnimationMixer(model)
           this.mixer.clipAction(gltf.animations[0]).play()
