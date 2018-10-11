@@ -6,6 +6,7 @@
 <script>
 import * as THREE from 'three'
 import GLTFLoader from './assets/js/gltfloader'
+import OrbitControls from 'orbit-controls-es6';
 
 export default {
   name: 'load-object',
@@ -26,25 +27,35 @@ export default {
     },
     createScene () {
       this.clock = new THREE.Clock();
-
       this.scene = new THREE.Scene()
-
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
       this.camera.position.z = 300
 
+      this.initRenderer()
+      this.initControls()
+      this.initLights()
+      this.loadObject()
+
+      this.render()
+    },
+    initRenderer () {
       this.renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true
       })
       this.setRendererSize()
       this.$el.appendChild(this.renderer.domElement)
-
+    },
+    initControls () {
+      this.controls = new OrbitControls(this.camera)
+      this.controls.enableDamping = true
+      this.controls.dampingFactor = 0.3
+      this.controls.minDistance = 70
+      this.controls.maxDistance = 300
+    },
+    initLights () {
       this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1)
       this.scene.add(this.light)
-
-      this.loadObject()
-
-      this.render()
     },
     loadObject () {
       this.loader = new THREE.GLTFLoader()
@@ -54,8 +65,6 @@ export default {
         (gltf) => {
           let model = gltf.scene
           this.scene.add(model)
-
-          console.log(gltf)
 
           this.mixer = new THREE.AnimationMixer(model)
           this.mixer.clipAction(gltf.animations[0]).play()
@@ -76,6 +85,8 @@ export default {
       if (this.mixer != null) {
           this.mixer.update(delta);
       };
+
+      this.controls.update()
 
       this.renderer.render(this.scene, this.camera)
     },

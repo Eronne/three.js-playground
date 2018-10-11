@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "gsap": "^2.0.2",
+    "orbit-controls-es6": "^2.0.0",
     "three": "^0.97.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
