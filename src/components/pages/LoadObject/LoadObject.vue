@@ -41,8 +41,9 @@ export default {
     initRenderer () {
       this.renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: true
+        antialias: false,
       })
+      this.renderer.gammaOutput = true
       this.setRendererSize()
       this.$el.appendChild(this.renderer.domElement)
     },
@@ -54,16 +55,18 @@ export default {
       this.controls.maxDistance = 300
     },
     initLights () {
-      this.light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1)
-      this.scene.add(this.light)
+      this.ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.3)
+      this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+      this.scene.add(this.ambientLight, this.directionalLight)
     },
     loadObject () {
       this.loader = new THREE.GLTFLoader()
 
       this.loader.load(
-        './../../../../static/gltf/scene.gltf',
+        '/static/gltf/scene.gltf',
         (gltf) => {
           let model = gltf.scene
+          console.log(model);
           this.scene.add(model)
 
           this.mixer = new THREE.AnimationMixer(model)
@@ -105,6 +108,12 @@ export default {
 </script>
 
 <style scoped>
+.page {
+  background-image: url("/static/bg.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
 .page--planes {
   position: relative;
 }
