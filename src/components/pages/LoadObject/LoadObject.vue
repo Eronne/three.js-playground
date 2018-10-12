@@ -65,11 +65,11 @@ export default {
       this.loader.load(
         '/static/gltf/scene.gltf',
         (gltf) => {
-          let model = gltf.scene
-          console.log(model);
-          this.scene.add(model)
+          this.model = gltf.scene
+          console.log(this.model);
+          this.scene.add(this.model)
 
-          this.mixer = new THREE.AnimationMixer(model)
+          this.mixer = new THREE.AnimationMixer(this.model)
           this.mixer.clipAction(gltf.animations[0]).play()
         },
         function (xhr) {
@@ -83,6 +83,8 @@ export default {
     },
     render () {
       requestAnimationFrame(this.render)
+
+      if(this.model) this.model.rotation.y += 0.004
 
       let delta = this.clock.getDelta()
       if (this.mixer != null) {
