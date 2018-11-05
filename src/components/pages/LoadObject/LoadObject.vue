@@ -1,64 +1,23 @@
 <template>
   <section class="page page--planes">
+      <input type="range" min="0" max="0.2" value="0" step="0.001" class="slider" id="animationRange">
   </section>
 </template>
 
 <script>
 import * as THREE from 'three'
 import GLTFLoader from './assets/js/gltfloader'
-import OrbitControls from 'orbit-controls-es6';
+import OrbitControls from 'orbit-controls-es6'
+import InitMixin from '@/mixins/InitMixin'
 
 export default {
   name: 'load-object',
+  mixins: [InitMixin],
   mounted () {
-    this.createScene()
-    this.addListeners()
+    this.clock = new THREE.Clock()
+    this.loadObject()
   },
   methods: {
-    addListeners () {
-      window.addEventListener('resize', this.setRendererSize)
-      window.addEventListener('mousemove', this.getMousePosition)
-      window.addEventListener('click', this.scalePlaneWhenIntersect)
-    },
-    removeListeners () {
-      window.removeEventListener('resize', this.setRendererSize)
-      window.removeEventListener('mousemove', this.getMousePosition)
-      window.removeEventListener('click', this.scalePlaneWhenIntersect)
-    },
-    createScene () {
-      this.clock = new THREE.Clock();
-      this.scene = new THREE.Scene()
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-      this.camera.position.z = 300
-
-      this.initRenderer()
-      this.initControls()
-      this.initLights()
-      this.loadObject()
-
-      this.render()
-    },
-    initRenderer () {
-      this.renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: false,
-      })
-      this.renderer.gammaOutput = true
-      this.setRendererSize()
-      this.$el.appendChild(this.renderer.domElement)
-    },
-    initControls () {
-      this.controls = new OrbitControls(this.camera)
-      this.controls.enableDamping = true
-      this.controls.dampingFactor = 0.3
-      this.controls.minDistance = 70
-      this.controls.maxDistance = 300
-    },
-    initLights () {
-      this.ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.3)
-      this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
-      this.scene.add(this.ambientLight, this.directionalLight)
-    },
     loadObject () {
       this.loader = new THREE.GLTFLoader()
 
@@ -66,11 +25,12 @@ export default {
         '/static/gltf/scene.gltf',
         (gltf) => {
           this.model = gltf.scene
-          console.log(this.model);
+          console.log(this.model)
           this.scene.add(this.model)
 
           this.mixer = new THREE.AnimationMixer(this.model)
           this.mixer.clipAction(gltf.animations[0]).play()
+          console.log(gltf.animations[0])
         },
         function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded')
@@ -88,23 +48,13 @@ export default {
 
       let delta = this.clock.getDelta()
       if (this.mixer != null) {
-          this.mixer.update(delta);
-      };
+        this.mixer.update(delta)
+      }
 
-      this.controls.update()
+      // this.controls.update()
 
       this.renderer.render(this.scene, this.camera)
-    },
-    setRendererSize () {
-      this.width = window.innerWidth
-      this.height = window.innerHeight
-      this.renderer.setSize(this.width, this.height)
-      this.camera.aspect = this.width / this.height
-      this.camera.updateProjectionMatrix()
     }
-  },
-  beforeDestroy () {
-    this.removeListeners()
   }
 }
 </script>
@@ -118,5 +68,11 @@ export default {
 }
 .page--planes {
   position: relative;
+}
+
+#animationRange {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

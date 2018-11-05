@@ -6,6 +6,7 @@
 <script>
 import * as THREE from 'three'
 import { TweenMax } from 'gsap'
+import ListenersMixin from '@/mixins/ListenersMixin'
 
 import vertexSource from './shaders/vert.vs'
 import fragmentSource from './shaders/frag.fs'
@@ -13,21 +14,11 @@ import texturePath from './assets/planes-bg.jpg'
 
 export default {
   name: 'planes-full-screen',
+  mixins: [ListenersMixin],
   mounted () {
     this.createScene()
-    this.addListeners()
   },
   methods: {
-    addListeners () {
-      window.addEventListener('resize', this.setRendererSize)
-      window.addEventListener('mousemove', this.getMousePosition)
-      window.addEventListener('click', this.scalePlaneWhenIntersect)
-    },
-    removeListeners () {
-      window.removeEventListener('resize', this.setRendererSize)
-      window.removeEventListener('mousemove', this.getMousePosition)
-      window.removeEventListener('click', this.scalePlaneWhenIntersect)
-    },
     createScene () {
       this.scene = new THREE.Scene()
 
@@ -116,9 +107,6 @@ export default {
         }
       })
     }
-  },
-  beforeDestroy () {
-    this.removeListeners()
   }
 }
 </script>
