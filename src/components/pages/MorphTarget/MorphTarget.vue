@@ -4,7 +4,6 @@
 
 <script>
 import * as THREE from 'three'
-import OrbitControls from 'orbit-controls-es6'
 import InitMixin from '@/mixins/InitMixin'
 
 export default {
@@ -21,13 +20,13 @@ export default {
         0, 1, 0,
         1, 1, 0,
         1, 0, 0,
-        0, 0, 0,
+        0, 0, 0
       ])
       const morphPositions = new Float32Array([
         0, 2, 0,
         1, 1, 0,
         2, 0, 0,
-        0, 0, 0,
+        0, 0, 0
       ])
       const indices = new Uint16Array([
         0, 3, 1,
@@ -49,7 +48,7 @@ export default {
         morphTargets: true
       })
 
-      this.mesh = new THREE.Mesh( geometry, material );
+      this.mesh = new THREE.Mesh(geometry, material)
       this.scene.add(this.mesh)
     }
   }

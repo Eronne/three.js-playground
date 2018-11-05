@@ -22,7 +22,7 @@ export default {
     initRenderer () {
       this.renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: false,
+        antialias: false
       })
       this.renderer.gammaOutput = true
       this.setRendererSize()
@@ -36,7 +36,7 @@ export default {
       this.controls.maxDistance = 300
     },
     initLights () {
-      this.ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.3)
+      this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3)
       this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
       this.scene.add(this.ambientLight, this.directionalLight)
     },

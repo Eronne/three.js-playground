@@ -7,7 +7,6 @@
 <script>
 import * as THREE from 'three'
 import GLTFLoader from './assets/js/gltfloader'
-import OrbitControls from 'orbit-controls-es6'
 import InitMixin from '@/mixins/InitMixin'
 
 export default {
@@ -19,7 +18,7 @@ export default {
   },
   methods: {
     loadObject () {
-      this.loader = new THREE.GLTFLoader()
+      this.loader = new GLTFLoader()
 
       this.loader.load(
         '/static/gltf/scene.gltf',
@@ -44,7 +43,7 @@ export default {
     render () {
       requestAnimationFrame(this.render)
 
-      if(this.model) this.model.rotation.y += 0.004
+      if (this.model) this.model.rotation.y += 0.004
 
       let delta = this.clock.getDelta()
       if (this.mixer != null) {
