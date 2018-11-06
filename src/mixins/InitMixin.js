@@ -4,14 +4,29 @@ import ListenersMixin from './ListenersMixin'
 
 export default {
   mixins: [ListenersMixin],
+  data () {
+    return {
+      cameraOptions: {
+        fov: 75,
+        near: 0.1,
+        far: 1000,
+        x: 0,
+        y: 0,
+        z: 5
+      },
+      rendererOptions: {
+        alpha: true
+      }
+    }
+  },
   mounted () {
     this.createScene()
   },
   methods: {
     createScene () {
       this.scene = new THREE.Scene()
-      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-      this.camera.position.z = 10
+      this.camera = new THREE.PerspectiveCamera(this.cameraOptions.fov, window.innerWidth / window.innerHeight, this.cameraOptions.near, this.cameraOptions.far)
+      this.camera.position.set(this.cameraOptions.x, this.cameraOptions.y, this.cameraOptions.z)
 
       this.initRenderer()
       this.initControls()
@@ -20,11 +35,7 @@ export default {
       this.render()
     },
     initRenderer () {
-      this.renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: false
-      })
-      this.renderer.gammaOutput = true
+      this.renderer = new THREE.WebGLRenderer(this.rendererOptions)
       this.setRendererSize()
       this.$el.appendChild(this.renderer.domElement)
     },
@@ -32,8 +43,8 @@ export default {
       this.controls = new OrbitControls(this.camera)
       this.controls.enableDamping = true
       this.controls.dampingFactor = 0.3
-      this.controls.minDistance = 70
-      this.controls.maxDistance = 300
+      this.controls.minDistance = this.cameraOptions.z / 2
+      this.controls.maxDistance = this.cameraOptions.z * 2
     },
     initLights () {
       this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3)
@@ -41,7 +52,7 @@ export default {
       this.scene.add(this.ambientLight, this.directionalLight)
     },
     render () {
-      requestAnimationFrame(this.render)
+      this.raf = requestAnimationFrame(this.render)
 
       this.controls.update()
 
@@ -54,5 +65,8 @@ export default {
       this.camera.aspect = this.width / this.height
       this.camera.updateProjectionMatrix()
     }
+  },
+  beforeDestroy () {
+    cancelAnimationFrame(this.raf)
   }
 }

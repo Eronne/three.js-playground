@@ -75,7 +75,7 @@ export default {
       })
     },
     render () {
-      requestAnimationFrame(this.render)
+      this.raf = requestAnimationFrame(this.render)
       this.raycaster.setFromCamera(this.center, this.camera)
 
       this.mousePositionRatio = this.mousePositions.y / window.innerHeight
@@ -107,6 +107,9 @@ export default {
         }
       })
     }
+  },
+  beforeDestroy () {
+    cancelAnimationFrame(this.raf)
   }
 }
 </script>

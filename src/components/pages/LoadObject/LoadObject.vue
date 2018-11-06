@@ -12,8 +12,16 @@ import InitMixin from '@/mixins/InitMixin'
 export default {
   name: 'load-object',
   mixins: [InitMixin],
+  data () {
+    return {
+      cameraOptions: {
+        z: 220
+      }
+    }
+  },
   mounted () {
     this.clock = new THREE.Clock()
+    this.renderer.gammaOutput = true
     this.loadObject()
   },
   methods: {
@@ -24,12 +32,10 @@ export default {
         '/static/gltf/scene.gltf',
         (gltf) => {
           this.model = gltf.scene
-          console.log(this.model)
           this.scene.add(this.model)
 
           this.mixer = new THREE.AnimationMixer(this.model)
           this.mixer.clipAction(gltf.animations[0]).play()
-          console.log(gltf.animations[0])
         },
         function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded')
@@ -41,7 +47,7 @@ export default {
       )
     },
     render () {
-      requestAnimationFrame(this.render)
+      this.raf = requestAnimationFrame(this.render)
 
       if (this.model) this.model.rotation.y += 0.004
 
