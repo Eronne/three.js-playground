@@ -2,4 +2,3 @@
 /config/
 /dist/
 /*.js
-/src/components/pages/LoadObject/assets/js/*.js
