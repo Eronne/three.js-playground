@@ -11,22 +11,23 @@ export default {
   mixins: [InitMixin],
   mounted () {
     this.initGeometry()
+    this.initAnimation()
   },
   methods: {
     initGeometry () {
       const geometry = new THREE.BufferGeometry()
 
       const positions = new Float32Array([
-        0, 1, 0,
+        -1, 1, 0,
         1, 1, 0,
-        1, 0, 0,
-        0, 0, 0
+        1, -1, 0,
+        -1, -1, 0
       ])
       const morphPositions = new Float32Array([
-        0, 2, 0,
-        1, 1, 0,
-        2, 0, 0,
-        0, 0, 0
+        -1, 3, 0,
+        .5, .5, 0,
+        3, -1, 0,
+        -1, -1, 0
       ])
       const indices = new Uint16Array([
         0, 3, 1,
@@ -50,6 +51,24 @@ export default {
 
       this.mesh = new THREE.Mesh(geometry, material)
       this.scene.add(this.mesh)
+    },
+    initAnimation () {
+      const keyFrame = new THREE.NumberKeyframeTrack('geometry.morphTargetInfluences', [0, 1], [0, 1], THREE.InterpolateSmooth)
+      const clip = new THREE.AnimationClip('wavelineMorphTargetsClip', 1, [keyFrame])
+
+      this.mixer = new THREE.AnimationMixer(this.mesh)
+
+      const animationAction = this.mixer.clipAction(clip)
+      animationAction.loop = THREE.LoopPingPong
+      animationAction.play()
+    },
+    render () {
+      this.raf = requestAnimationFrame(this.render)
+
+      this.mixer.update(0.01)
+      this.controls.update()
+
+      this.renderer.render(this.scene, this.camera)
     }
   }
 }
