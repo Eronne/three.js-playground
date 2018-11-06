@@ -9,6 +9,11 @@ import InitMixin from '@/mixins/InitMixin'
 export default {
   name: 'morph-target',
   mixins: [InitMixin],
+  data () {
+    return {
+      enableControls: false
+    }
+  },
   mounted () {
     this.initGeometry()
     this.initAnimation()
@@ -66,7 +71,6 @@ export default {
       this.raf = requestAnimationFrame(this.render)
 
       this.mixer.update(0.01)
-      this.controls.update()
 
       this.renderer.render(this.scene, this.camera)
     }

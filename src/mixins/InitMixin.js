@@ -16,7 +16,8 @@ export default {
       },
       rendererOptions: {
         alpha: true
-      }
+      },
+      enableControls: true
     }
   },
   mounted () {
@@ -40,11 +41,13 @@ export default {
       this.$el.appendChild(this.renderer.domElement)
     },
     initControls () {
-      this.controls = new OrbitControls(this.camera)
-      this.controls.enableDamping = true
-      this.controls.dampingFactor = 0.3
-      this.controls.minDistance = this.cameraOptions.z / 2
-      this.controls.maxDistance = this.cameraOptions.z * 2
+      if (this.enableControls) {
+        this.controls = new OrbitControls(this.camera)
+        this.controls.enableDamping = true
+        this.controls.dampingFactor = 0.3
+        this.controls.minDistance = this.cameraOptions.z / 2
+        this.controls.maxDistance = this.cameraOptions.z * 2
+      }
     },
     initLights () {
       this.ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3)
@@ -54,7 +57,7 @@ export default {
     render () {
       this.raf = requestAnimationFrame(this.render)
 
-      this.controls.update()
+      if (this.enableControls) this.controls.update()
 
       this.renderer.render(this.scene, this.camera)
     },
