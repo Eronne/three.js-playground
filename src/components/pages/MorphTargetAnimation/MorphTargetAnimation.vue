@@ -22,7 +22,7 @@ export default {
     initGeometry () {
       const geometry = new THREE.BufferGeometry()
 
-      const positions = new Float32Array([
+      const position = new Float32Array([
         -1, 1, 0,
         1, 1, 0,
         1, -1, 0,
@@ -40,7 +40,7 @@ export default {
       ])
 
       geometry.setIndex(new THREE.BufferAttribute(indices, 1))
-      geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3))
+      geometry.addAttribute('position', new THREE.BufferAttribute(position, 3))
 
       geometry.morphAttributes.position = []
       geometry.morphAttributes.position[0] = new THREE.BufferAttribute(morphPositions, 3)
