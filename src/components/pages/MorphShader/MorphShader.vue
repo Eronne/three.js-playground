@@ -40,7 +40,9 @@ export default {
 
       const material = new THREE.ShaderMaterial({
         uniforms: {
-          progress: 0.4
+          progress: {
+            value: 0.1
+          }
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
