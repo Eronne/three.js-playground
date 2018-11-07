@@ -1,5 +1,5 @@
 <template>
-  <section class="page page__morph-target"></section>
+  <section class="page page__morph-target-animation"></section>
 </template>
 
 <script>
@@ -7,7 +7,7 @@ import * as THREE from 'three'
 import InitMixin from '@/mixins/InitMixin'
 
 export default {
-  name: 'morph-target',
+  name: 'morph-target-animation',
   mixins: [InitMixin],
   data () {
     return {
