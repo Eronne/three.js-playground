@@ -103,6 +103,9 @@ export default {
     on () {
       window.addEventListener('resize', Utils.debounce(this.resizeWindow()), 1000)
     }
+  },
+  beforeDestroy() {
+    cancelAnimationFrame(this.raf)
   }
 }
 </script>
