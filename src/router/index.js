@@ -5,6 +5,7 @@ import PlanesFullScreen from '@/components/pages/PlanesFullScreen/PlanesFullScre
 import LoadObject from '@/components/pages/LoadObject/LoadObject'
 import MorphTargetAnimation from '@/components/pages/MorphTargetAnimation/MorphTargetAnimation'
 import MorphShader from '@/components/pages/MorphShader/MorphShader'
+import FogShader from '@/components/pages/FogShader/FogShader'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/morph-shader',
       name: 'MorphShader',
       component: MorphShader
+    },
+    {
+      path: '/fog-shader',
+      name: 'FogShader',
+      component: FogShader
     }
   ]
 })
