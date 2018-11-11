@@ -35,6 +35,8 @@ export default {
       })
 
       this.clock = new THREE.Clock()
+      this.raycaster = new THREE.Raycaster()
+      this.mouse = new THREE.Vector2()
 
       this.texsSrc = {
         fog: 'https://ykob.github.io/sketch-threejs/img/sketch/fog/fog.png'
@@ -83,6 +85,14 @@ export default {
     render () {
       const time = this.clock.getDelta()
       this.fog.render(time)
+
+      this.raycaster.setFromCamera(this.mouse, this.camera)
+      var intersects = this.raycaster.intersectObjects(this.scene.children)
+      for (var i = 0; i < intersects.length; i++) {
+        // console.log(intersects[i])
+      }
+
+
       this.renderer.render(this.scene, this.camera)
     },
     renderLoop () {
@@ -102,6 +112,11 @@ export default {
     },
     on () {
       window.addEventListener('resize', Utils.debounce(this.resizeWindow()), 1000)
+      window.addEventListener('mousemove', this.onMouseMove, false)
+    },
+    onMouseMove(event) {
+      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+      this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1
     }
   },
   beforeDestroy() {
